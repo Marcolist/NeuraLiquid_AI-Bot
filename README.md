@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Marcolist/NeuraLiquid_AI-Bot/main/NeuraLiquid.png" alt="NeuraLiquid" width="280">
+  <img src="NeuraLiquid.png" alt="NeuraLiquid" width="280">
 </p>
 
 <h1 align="center">NeuraLiquid</h1>
