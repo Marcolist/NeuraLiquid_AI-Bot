@@ -5,206 +5,143 @@
 <h1 align="center">NeuraLiquid</h1>
 
 <p align="center">
-  <strong>AI-Powered Autonomous Trading Agent for Hyperliquid Perpetuals</strong>
+  <strong>Modular trading research and automation for Hyperliquid</strong>
 </p>
 
 <p align="center">
-  Three AI minds. One decision. Zero API costs.
+  AI-assisted analysis · Pattern strategies · Copy trading · Risk management · Web and ESP32 dashboards
 </p>
 
 ---
 
-## What is NeuraLiquid?
+## Overview
 
-NeuraLiquid is a fully autonomous trading system that uses **Claude AI** to trade perpetual futures on [Hyperliquid](https://hyperliquid.xyz). Instead of relying on a single strategy or a fixed set of rules, it deploys a **Dual-Perspective Signal Pattern** — two AI analysts with opposing biases debate every trade before a portfolio manager makes the final call.
+NeuraLiquid is a personal trading and research platform for Hyperliquid perpetuals, including supported markets on the xyz DEX. It combines market scanning, AI-assisted decisions, algorithmic pattern detection, wallet tracking, execution and trade diagnostics.
 
-It runs 24/7, manages its own risk, learns from its trades, and costs nothing to operate beyond a Claude subscription.
+The project has evolved beyond its original three-agent Bull/Bear debate design. The current implementation includes an AI coin selector, a portfolio-manager analysis path, a configurable signal aggregator and conviction-based position sizing. Pattern trading, copy trading and a separate algorithmic scalper can operate as distinct modules.
 
----
+**This repository is the public project overview. It contains documentation and the logo, not the bot source code or an installable release. The implementation remains private.**
 
-## The Core Idea: AI Debate Before Every Trade
+## System at a glance
 
-Most trading bots follow rules. NeuraLiquid **thinks**.
+```text
+Market data and context
+Hyperliquid · Binance · News · Order flow
+                    |
+          Market scan and candidate selection
+                    |
+          AI selector + Portfolio Manager
+                    ^
+                    |
+          Signal aggregator
+          Pattern signals + Copy-trader signals
+                    |
+          Entry checks and conviction sizing
+                    |
+          Execution and position management
+                    |
+          Trade history and diagnostics
+                    |
+          Web dashboard · Telegram · ESP32 displays
 
-Every potential trade goes through a structured AI debate:
-
-| Role | Bias | Purpose |
-|---|---|---|
-| **Momentum Bull** | Aggressive | Finds early entries, momentum plays, trend continuations |
-| **Risk Skeptic** | Conservative | Challenges every setup, spots overextended moves, protects capital |
-| **Portfolio Manager** | Balanced | Synthesizes both perspectives, makes the final decision |
-
-Both analysts receive the same market data — technicals, funding rates, open interest, order flow, news sentiment, whale activity — but interpret it through their respective lenses. The Portfolio Manager weighs both arguments and decides: trade, skip, or reduce size.
-
-This isn't a gimmick. It's a systematic way to avoid the single biggest problem in algorithmic trading: **confirmation bias**.
-
----
-
-## What Makes It Different
-
-### Runs on Claude via OAuth — No API Costs
-
-NeuraLiquid uses the Claude CLI with OAuth authentication. If you have a Claude Pro or Max subscription, the bot runs at **zero additional cost**. No pay-per-token billing, no API key management.
-
-### 7-Stage Entry Filter Pipeline
-
-A green light from the AI debate is just the beginning. Every trade must pass through seven independent filters before execution:
-
-1. **Market Regime** — Is the broader market trending or ranging?
-2. **Meta-Labeling** — What's the historical win rate for this exact setup?
-3. **ML Model** — A self-trained model predicts win probability from candle patterns
-4. **VWAP Confirmation** — Is price positioned correctly relative to volume-weighted average?
-5. **Momentum & Volume** — Do RSI and volume confirm the direction?
-6. **Whale Order Flow** — Are large players moving with or against the trade?
-7. **Risk-Reward Check** — Do orderbook walls make the R:R ratio unacceptable?
-
-Each filter can halve the position size or reject the trade entirely. The result: fewer trades, higher quality.
-
-### Self-Learning ML Signal Filter
-
-The bot trains its own machine learning model from historical data — no external libraries required. It uses triple-barrier labeling to evaluate whether past setups hit take-profit or stop-loss first, then applies those learnings to filter future entries. Training happens automatically during off-hours.
-
-### Adaptive Everything
-
-Nothing is static:
-
-- **Leverage** adjusts to volatility (2x in chaos, up to 5x in calm markets)
-- **Stop-Loss & Take-Profit** scale with ATR instead of using fixed percentages
-- **Loop Interval** ranges from 60 seconds (high volatility) to 10 minutes (low volatility)
-- **Position Size** scales with the Portfolio Manager's confidence (0.25x to 1.0x)
-
-### Whale Tracking & Order Flow
-
-A real-time whale watcher monitors:
-
-- **Trade Flow** across top coins every 30 seconds, detecting buy/sell imbalances
-- **Leaderboard Positions** from Hyperliquid's top 10 most profitable active traders
-- **Large Trades** exceeding $10k that signal institutional movement
-
-These signals feed directly into the AI debate as additional context.
-
-### Cross-Exchange Intelligence
-
-The bot pulls signals from Binance (no API key needed) to compare:
-
-- Funding rate divergences between Hyperliquid and Binance
-- Top trader long/short ratios for contrarian signals
-- Volume confirmation across exchanges
-
-### News Sentiment & Emergency Detection
-
-A news agent continuously scans CoinDesk and CoinTelegraph for market-moving events. If it detects an emergency (hack, depeg, major exploit), it can trigger an immediate close of all positions.
-
----
-
-## Risk Management
-
-NeuraLiquid treats capital preservation as a first-class feature:
-
-- **Account Drawdown Protection** — Hard stop at 15% drawdown, closes everything
-- **Daily Loss Limit** — Configurable cap, triggers cooldown when hit
-- **Diamond Hands Mode** — BTC, ETH, SOL longs are never sold at a loss
-- **6 Exit Mechanisms** — Stop-loss, take-profit, trailing stops, partial exits, time-based ROI tables, and stuck position detection
-- **Session Timing** — No new trades during thin market hours (configurable)
-- **Cooldowns** — 30 min after stop-loss hits, 2h before re-entering the same coin
-- **Correlation Check** — Prevents stacking correlated positions
-
----
-
-## Full Control From Anywhere
-
-### Web Dashboard
-
-A real-time dashboard with full control:
-
-- Live portfolio with P&L, open positions, entry prices, and stop levels
-- Market scanner with top coins ranked by volume, funding, and open interest
-- One-click Dual-Perspective analysis for any coin
-- Manual order placement (long, short, close)
-- Full reasoning chain for every trade decision
-- Trade performance analytics (win rate, P&L, day vs night breakdown)
-- ML model status, accuracy metrics, and manual training trigger
-- Bot controls: start, stop, dry run, restart, close all
-
-### Telegram Bot
-
-Two-way Telegram integration for remote monitoring and control:
-
-- **Alerts**: Trade opens/closes, stop-loss hits, daily loss warnings, errors
-- **Commands**: Check status, view positions, close trades, start/stop the bot — all from your phone
-
-### Hardware Display
-
-For those who want a dedicated screen: a custom firmware for the ESP32 CYD (Cheap Yellow Display) shows account balance, daily P&L, open positions, and win rate on a 2.8" touchscreen with WiFi connectivity.
-
----
-
-## Architecture
-
-```
-Market Data (Hyperliquid + Binance + News + Whale Flow)
-                        │
-                        ▼
-        ┌───────────────────────────────┐
-        │     Dual-Perspective Engine    │
-        │                               │
-        │  ┌─────────┐   ┌───────────┐  │
-        │  │Momentum │   │   Risk    │  │
-        │  │  Bull   │   │  Skeptic  │  │
-        │  └────┬────┘   └─────┬─────┘  │
-        │       └───────┬──────┘        │
-        │               ▼               │
-        │     ┌───────────────┐         │
-        │     │   Portfolio   │         │
-        │     │   Manager     │         │
-        │     └───────┬───────┘         │
-        └─────────────┼─────────────────┘
-                      ▼
-        ┌───────────────────────────────┐
-        │   7-Stage Entry Filter        │
-        │   Regime → Meta → ML → VWAP   │
-        │   → Momentum → Flow → R:R     │
-        └───────────────┬───────────────┘
-                        ▼
-        ┌───────────────────────────────┐
-        │   Adaptive Execution          │
-        │   Size · Leverage · SL · TP   │
-        └───────────────┬───────────────┘
-                        ▼
-        ┌───────────────────────────────┐
-        │   Risk Manager (continuous)   │
-        │   SL/TP · Trailing · Partial  │
-        │   ROI Table · Stuck · Stale   │
-        └───────────────────────────────┘
+Separate configurable modules:
+Pattern engine · Copy-trading engine · Algorithmic scalper
 ```
 
----
+This is a conceptual overview. Each trading module has its own configuration and execution path; they do not all pass through the AI portfolio manager.
 
-## Tech Stack
+## AI-assisted decision pipeline
 
-| Component | Technology |
+- **Market scan:** ranks candidates using market activity, funding, technical context and supported xyz markets.
+- **AI coin selector:** narrows the candidate list before deeper analysis.
+- **Portfolio Manager:** evaluates bullish and bearish arguments and returns a structured buy, sell or hold decision.
+- **Signal aggregation:** can add pattern detections and tracked-wallet signals to the analysis. These sources can be enabled independently.
+- **Conviction-based sizing:** combines supporting evidence and warnings to adjust position size, alongside entry checks and configured limits.
+- **Analysis controls:** configurable gates, caching and fast/deep cycles reduce repeated work. The older dual-perspective analysis path is also retained.
+
+The implementation supports a Claude CLI backend and an Anthropic API backend. Model access, usage limits and costs depend on the selected provider configuration; this overview makes no zero-cost or unlimited-usage claim.
+
+## Trading and research modules
+
+### Pattern engine
+
+The pattern engine implements 15 detectors spanning market-structure patterns and classical technical setups:
+
+- Fair Value Gap, Break of Structure and Change of Character
+- Order Block, Liquidity Sweep and Equal-High/Low Sweep
+- FVG Inversion, Premium/Discount Order Block, Breaker Block and Mitigation Block
+- Session Breakout, 1-2-3 Reversal and Turtle Soup
+- Double Top/Bottom and Triple Top/Bottom
+
+The surrounding workflow includes simulation, configurable dry/live operation, per-pair statistics and optional ML-based confidence estimates. Long and short setups can be tracked separately by pattern, market and timeframe.
+
+### Copy trading
+
+A separate module discovers and tracks Hyperliquid wallets, evaluates their trading history and supports signal-only, selective-copy and mirror modes. Configuration includes wallet selection, position limits and optional Kelly-based sizing.
+
+Tracked-wallet signals can also be used as context for the AI pipeline without enabling automatic copying.
+
+### Algorithmic scalper
+
+A separate non-LLM scalper evaluates short-cycle signals such as exhaustion, RSI reversals and order-book imbalance. It has its own execution settings, loss limits and dry-run option.
+
+### Market and news context
+
+Analysis modules cover technical indicators, multiple timeframes, funding, open-interest changes, order-book conditions, whale activity and Binance cross-exchange context.
+
+News processing combines crypto and business sources, asset-specific headlines, sentiment and macro-event context. AI-assisted sentiment analysis has a keyword-based fallback.
+
+## Execution, risk and diagnostics
+
+The implementation includes:
+
+- Configurable position, leverage, exposure and loss limits
+- Exchange-side stop/target order support and trailing-stop logic
+- Pattern-engine position recovery and stop-verification routines
+- Cooldowns, time-based exits and consecutive-loss pauses
+- Persistent trade and decision history in SQLite
+- Maximum favorable/adverse excursion (MFE/MAE) and exit diagnostics
+- Simulation, dry-run records and live-fill reconciliation for comparing expected and observed behavior
+
+**Risk behavior depends on the module and configuration.** For example, the optional “Diamond Hands” mode changes stop-loss behavior for selected long positions. Simulated or dry-run outcomes are not equivalent to live execution, and exchange orders do not guarantee a fill at the trigger price.
+
+## Interfaces
+
+### Web dashboard
+
+A Flask-based dashboard provides portfolio and market views, trade history, AI reasoning, pattern simulation, active-pair controls, copy-trading views, analysis and settings.
+
+### Telegram
+
+Two-way Telegram integration provides alerts and remote commands for status, positions and bot control.
+
+### ESP32 displays
+
+Hardware dashboards provide a dedicated view of account and trading status. The project includes both a CYD touchscreen implementation and an additional ESP32 pixel-dashboard implementation.
+
+## Technology
+
+| Area | Implementation |
 |---|---|
-| Language | Python |
-| AI Engine | Claude (Haiku for analysts, Sonnet for PM) |
-| Exchange | Hyperliquid (Perpetual Futures) |
-| Cross-Exchange Data | Binance (public endpoints) |
-| ML | Custom feature-scoring model (zero dependencies) |
-| Price Feed | WebSocket (real-time) with REST fallback |
-| Dashboard | Flask + vanilla JS |
-| Database | SQLite |
-| Alerts & Control | Telegram Bot API |
-| Hardware Display | ESP32-2432S028R (PlatformIO) |
+| Core and trading modules | Python |
+| AI integration | Claude CLI or Anthropic API |
+| Exchange integration | Hyperliquid SDK, REST and WebSocket components |
+| Market context | Hyperliquid, Binance and news sources |
+| Dashboard | Flask, HTML and JavaScript |
+| Persistence | SQLite and structured logs |
+| Remote interface | Telegram Bot API |
+| Hardware | ESP32, C++ and PlatformIO |
 
----
+## Development status
 
-## Status
+NeuraLiquid is an evolving personal project with both research and live-execution capabilities. Feature availability in the code does not establish profitability, production readiness or the status of a particular running deployment.
 
-NeuraLiquid is actively developed and running in production. The source code is in a private repository.
+This public overview was refreshed on **27 September 2026** against the current private implementation. It intentionally excludes private source code, credentials, account data and internal performance records.
 
-This project is a personal trading tool — not financial advice, not an investment product. Use at your own risk.
+There is no public installation package in this repository.
 
 ---
 
 <p align="center">
-  Built with Claude AI on Hyperliquid
+  Built for exploring the connection between market data, automated decisions and practical trading infrastructure.
 </p>
